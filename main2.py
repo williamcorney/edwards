@@ -11,46 +11,49 @@ if  os.path.isfile('cache2') is False:
 with open('cache2', 'r') as f:
     contents = f.read()
 
-
-
-
-  #  filename = os.path.basename(links.get('href'))
-
-    #if "path" in links:
-   # print (links)
-
-    #filename = os.path.basename(links.get('href'))
-    #dirname   = os.path.dirname(links.get('href'))
-    #if "archive" in dirname:
-     #   url = dirname
-      #  links['href'] = links['href'].replace (filename, filename + '.html')
-       # links['href'] = links['href'].replace(dirname + '/', '')
-
 soup = BeautifulSoup(contents, "html.parser")
 for unwanted in soup ("input"):
   unwanted.decompose()
 
-
 result = soup.select('style .navlevel1 , .navlevel2, .navlevel3 ')
+style = soup.select('style')
+
 for items in result:
     with open("index2.html", "a") as myfile: myfile.write(str(items))
 
 with open('index2.html', 'r') as f: contents = f.read()
 soup = BeautifulSoup(contents, "html.parser")
 
-
-
+os.remove('index2.html')
 
 for links in soup.findAll('a'):
     filename = os.path.basename(links.get('href'))
     dirname = os.path.dirname(links.get('href'))
-    print (dirname)
+    url = dirname
+    links['href'] = links['href'].replace(filename, filename + '.html')
+    links['href'] = links['href'].replace(dirname + '/', '')
 
-    #links['href'] = links['href'].replace(filename, filename + '.html')
-    #links['href'] = links['href'].replace(dirname + '/', '')
+for items in style:
+    with open("index2.html", "a") as myfile: myfile.write(str(items))
 
+for items in soup:
+    with open("index2.html", "a") as myfile: myfile.write(str(items))
+downloadlist = {}
+result2 = soup
+for links in result2:
+    raw = links.select('a')
+    for items in raw:
+        key = items.get('href')
+        val = 'http://edwards.yale.edu/archive' + url
+        key = key.replace('.html', '')
+        downloadlist[key] = val
 
+for item,val in downloadlist.items():
+    downloadurl =  (val + "/" + item)
+    filename =  item + ".html"
 
+    print (downloadurl)
+    print (filename)
 
 #import webbrowser
 #webbrowser.open('file:///Users/williamcorney/Edwards/index2.html', new=2)
