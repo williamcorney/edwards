@@ -1,5 +1,8 @@
 from bs4 import BeautifulSoup
 import os,requests
+import pandas as pd
+from tabulate import tabulate
+from urllib.parse import urlparse
 
 if  os.path.isfile('index.html') is True: os.remove('index.html')
 if  os.path.isfile('cache') is False:
@@ -43,6 +46,11 @@ for item,val in downloadlist.items():
     print (downloadurl)
     print (filename)
 
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_colwidth', None)
+df = pd.DataFrame(downloadlist.items())
+print(tabulate(df, showindex=False, headers=df.columns))
+print ( "There are " + str(len(df)) + " items in this list")
 
 # Launch index page to browser
 import webbrowser
