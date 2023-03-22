@@ -44,6 +44,6 @@ for item,val in downloadlist.items():
     print (filename)
 
 
-# Launch soup to browser
+# Launch index page to browser
 import webbrowser
 webbrowser.open('file:///Users/williamcorney/Edwards/index.html', new=2)
