@@ -12,11 +12,35 @@ else:
     soup = BeautifulSoup(contents, "html.parser")
 
 for links in soup.findAll('a'):
+
     filename = os.path.basename(links.get('href'))
     dirname   = os.path.dirname(links.get('href'))
-    links['href'] = links['href'].replace (filename, filename + '.html')
-    links['href'] = links['href'].replace(dirname + '/', '')
+    if "archive" in dirname:
+        url = dirname
+        links['href'] = links['href'].replace (filename, filename + '.html')
+        links['href'] = links['href'].replace(dirname + '/', '')
+
 
 result = soup.select('style, #center ul ')
 for items in result:
     with open("index.html", "a") as myfile: myfile.write(str(items))
+
+downloadlist = {}
+
+result2 = soup.select('#center ul ')
+for links in result2:
+    raw = links.select('a')
+    for items in raw:
+        key = items.get('href')
+        val = 'http://edwards.yale.edu' + url
+        key = key.replace('.html', '')
+        downloadlist[key] = val
+
+for item,val in downloadlist.items():
+    downloadurl =  (val + "/" + item)
+    filename =  item + ".html"
+
+    print (downloadurl)
+    print (filename)
+
+
