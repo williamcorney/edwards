@@ -13,7 +13,7 @@ else:
 
 for links in soup.findAll('a'):
     filename = os.path.basename(links.get('href'))
-    dirname  = os.path.dirname(links.get('href'))
+    dirname   = os.path.dirname(links.get('href'))
     links['href'] = links['href'].replace (filename, filename + '.html')
     links['href'] = links['href'].replace(dirname + '/', '')
 
