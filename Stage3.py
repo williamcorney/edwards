@@ -4,6 +4,17 @@ import requests
 import csv
 import time
 
+with open('Stage2.csv', mode='r') as infile:
+    reader = csv.reader(infile)
+    mydict = {rows[0]:rows[1] for rows in reader}
+
+secondphaselinksandfilenames = {}
+for url,filename in mydict.items():
+
+   print (url)
+
+
+
 #page = (requests.get('http://edwards.yale.edu/archive?path=aHR0cDovL2Vkd2FyZHMueWFsZS5lZHUvY2dpLWJpbi9uZXdwaGlsby9nZXRvYmplY3QucGw/Yy4xODo3LndqZW8='))
 #soup = BeautifulSoup(page.text, "html.parser")
 #soup = soup.select ('#content #text')
