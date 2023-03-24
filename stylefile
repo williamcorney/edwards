@@ -1,0 +1,125 @@
+<style media="all" type="text/css">@import "/files/css/8e3c276defb8cb4e7ceb5167cddc627f.css";</style><style media="print" type="text/css">@import "/themes/wjeo/print.css";</style><style type="text/css">
+
+#content span.fnote {
+	color: #000000;
+}
+
+#content span.fnote * {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+#content a.fnote {
+	vertical-align: super;
+	font-size: 0.7em;
+}
+
+#footnotes {
+	border-top: 1px solid #ccc;
+	margin: 20px 0 20px 0;
+	padding: 10px 0 0 0;
+}
+
+#footnotes div.fnote {
+	margin: 0 0 5px 0;
+}
+#footnotes div.fnote p {
+	margin: 0 0 5px 0;
+	display: inline;
+}
+.tool-tip {
+	color: #fff;
+	width: 200px;
+	z-index: 13000;
+	font-family:Arial, Helvetica, sans-serif;
+}
+ 
+.tool-title {
+	font-weight: bold;
+	font-size: 16px;
+	margin: 0;
+	color: #b6c1d9;
+	padding: 8px 8px 4px;
+	background: url(?path=aHR0cDovL2Vkd2FyZHMueWFsZS5lZHUvZWRpdG9yc2NyaXB0cy9idWJibGUucG5n) top left;
+}
+ 
+.tool-text {
+	font-size: 11px;
+	padding: 4px 8px 8px;
+	background: url(?path=aHR0cDovL2Vkd2FyZHMueWFsZS5lZHUvZWRpdG9yc2NyaXB0cy9idWJibGUucG5n) bottom right;
+}
+span.emph {font-weight: bolder; }
+span.emphsc {FONT-SIZE: 12px;}
+span.hi   {font-weight: bolder;}
+span.foreign {font-style: italic;}
+span.bibl {font-style: italic;}
+span.title     {font-style: italic;}
+span.hiitalic  {font-style: italic;}
+span.hiunderline {text-decoration: underline;}
+span.hibold   {font-weight: bolder;}
+span.doctitle {display: block; text-align: center; FONT-SIZE: 24px; LINE-HEIGHT: 1.5;}
+span.byline {display: block; text-align: center; FONT-SIZE: 16px; LINE-HEIGHT: 1.5;}
+span.pubplace {display: block; text-align: center; FONT-SIZE: 16px; LINE-HEIGHT: 1.5;}
+span.docedition {display: block; text-align: center; FONT-SIZE: 16px; LINE-HEIGHT: 1.5;}
+span.publisher {display: block; text-align: center; FONT-SIZE: 16px; LINE-HEIGHT: 1.5;}
+span.docimprint {display: block; text-align: center; FONT-SIZE: 16px; LINE-HEIGHT: 1.5;}
+span.addrline {display: block; text-align: center; FONT-SIZE: 16px; LINE-HEIGHT: 1.5;}
+span.docauthor {display: block; text-align: center; FONT-SIZE: 20px; LINE-HEIGHT: 1.5;}
+span.docdate {display: block; text-align: center; FONT-SIZE: 20px; LINE-HEIGHT: 1.5;}
+span.opener   {display: block; text-align: center;}
+span.label   {display: block; text-align: center;}
+span.signed   {display: block; text-align: right;}
+span.stage    {display: block; text-align: right; font-style: italic; margin-left: 120px;}
+span.speaker  {display: block; text-align: center; FONT-SIZE: 16;}
+span.epigraph {display: block; margin-left: 300px;}
+span.salute   {display: block; text-align: center;}
+span.trailer  {display: block; text-align: center;}
+span.closer   {display: block; text-align: center;}
+span.item     {display: block; text-align: left;}
+span.role     {display: block; text-align: left; margin-left: 100px; margin-right: 100px}
+span.argument {display: block; text-align: left; margin-left: 100px; margin-right: 100px}
+span.roledesc {display: block; text-align: right; margin-right: 100px}
+span.l        {display: block; text-align: left;}
+span.small   {FONT-SIZE: 11px;}
+span.hismallcap {FONT-SIZE: 12px;}
+span.head    {display: block; text-align: center; font-weight: bolder; FONT-SIZE: 18px; LINE-HEIGHT: 1.5;}
+span.notetarget {FONT-SIZE: 12px; text-decoration: underline; vertical-align: super;}
+span.footnote {display: block; FONT-SIZE: 12px; margin-left: 60px; margin-right: 40px;}
+span.marginnote {display: block; FONT-SIZE: 12px; text-align: right;}
+span.inlinenote {display: block; FONT-SIZE: 12px;}
+span.generalnote {display: block; FONT-SIZE: 12px;}
+span.endnote {display: block; FONT-SIZE: 12px;}
+span.refalignright {display: block; text-align: right;}
+span.mstoneid {display: block; FONT-SIZE: 12px; text-align: right;}
+span.mstonen {display: block; FONT-SIZE: 12px; text-align: right;}
+span.mstonetype {display: block; text-align: center;}
+span.mwright {display: block; FONT-SIZE: 12px; text-align: right;}
+span.authfreqindt {display: block; text-align: left; margin-left: 60px;}
+span.perfreqindt {display: block; text-align: left; margin-left: 45px;}
+span.navhead {display: block; text-align: center; font-size: 16; font-weight: bold;}
+span.navbiblio {display: block; font-size: 14;}
+span.navlevel1 {display: block; text-align: left; font-size: 14;}
+span.navlevel2 {display: block; text-align: left; margin-left: 40px; FONT-SIZE: 14;}
+span.navlevel3 {display: block; text-align: left; margin-left: 60px; FONT-SIZE: 12;}
+span.projecthead { text-align: right; font-size: 20; color: #000000;}
+
+
+</style><style type="text/css">
+ .conglibimg { 
+    float: left; 
+    width:95%; 
+    border: 1px solid black; 
+    padding: 5px;
+    background: #B1B6C1;
+}
+ div.conglibimg img { 
+    width: 100%; height: auto; 
+    padding: 0px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.conglibcaption {font-size: 125%; font-weight: bold}
+</style>
