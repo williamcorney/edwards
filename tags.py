@@ -1,107 +1,64 @@
-from html.parser import HTMLParser
 from bs4 import BeautifulSoup
+
+from tidylib import tidy_document
+
+from html.parser import HTMLParser
 from html.entities import name2codepoint
 from colorama import Fore, Back, Style
-import time
-with open('cache', 'r') as f: contents = f.read()
-soup = BeautifulSoup(contents, "html.parser")
-
 import docx
+
 
 document = docx.Document()
 
 class MyHTMLParser(HTMLParser):
+
     def handle_starttag(self, tag, attrs):
-        self.flag = '0'
-
-        #attribute = str(attrs[class])
-
-        try:
-            test = str(attrs[0])
-        except:
-            test = ''
-
-        print(Fore.BLACK + Back.GREEN + "Start tag:", tag.upper() + ' ' + str(test))
-
-        print (Fore.WHITE + Back.BLACK)
+        self.fnotecounter = 0
         for attr in attrs:
+            self.attribute = (attr[1])
+            print(Fore.GREEN + "START (", self.attribute , ") " , tag)
+        if tag == 'p':
+            self.attribute ='p'
 
-            if 'fnote' in attr:
-                self.flag = 'fnote'
-            if 'head' in attr:
-                self.flag = 'head'
-            if '1' in attr:
-                self.flag = '1'
-        if len(tag) < 2 :
-            self.flag = 'p'
-            self.tag = ''
 
     def handle_endtag(self, tag):
-        print(Fore.RED + "End tag:", tag.upper())
-
+        print (Fore.YELLOW + 'END of ' + tag)
+        #print(Fore.RED + "End tag        :",tag[0:10])
     def handle_data(self, data):
+        print ('TEST**' + self.lasttag  + '**TEST')
+        print (Fore.LIGHTBLUE_EX + self.attribute + " " +  data)
+        #print(Fore.BLUE + 'Data           : ' + data)
 
-        length = len (data)
-        if length > 2:
-            print(Fore.LIGHTGREEN_EX + "Data     :", data)
-            print (self.flag)
-        #if 'head' in self.flag:
-         #   print ('blablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablablabla')
-         #   document.add_heading(data, 0)
-        if 'p' in self.flag:
-            print(Fore.LIGHTYELLOW_EX + " Flag was P")
-            p = document.add_paragraph(data)
-        if 'head' in self.flag:
+        if 'head' in self.attribute:
             document.add_heading(data, 0)
+        if self.fnotecounter == 0:
+            if 'fnote' in self.attribute:
+                self.paragraph.add_footnote(data)  # add a footnote
+                self.fnotecounter = 1
+        else:
+            self.paragraph = document.add_paragraph(data)  # create new paragraph
+        if 'p' in self.attribute:
+            self.paragraph = document.add_paragraph(data) # create new paragraph
 
-for tag in soup.find_all(attrs={'style': True}):
-    del tag['style']
-
-with open("cache", "w") as myfile: myfile.write(str(soup))
 
 
 
 
 with open('cache', 'r') as f: contents = f.read()
-soup = BeautifulSoup(contents, "html.parser")
-parser = MyHTMLParser()
+soup = BeautifulSoup(contents, "lxml")
+unwantedtags=['body','html','daterange','date','div']
+for tags in unwantedtags:
+    target = soup.find_all(tags)
+    for items in target: items.unwrap()
+for span_tag in soup.findAll('span', {'class':'reg'}): span_tag.unwrap()
+for span_tag in soup.findAll('span', {'class':'bibl'}): span_tag.unwrap()
+for tag in soup.findAll('span', {'class':''}): tag.unwrap()
+for items in soup.select('.fnote'):
+    if 'id' in (items.attrs): items.attrs.pop('id')
 
-div_tags = soup.find_all('date')
-for item in div_tags: item.unwrap()
-div_tags = soup.find_all('daterange')
-for item in div_tags: item.unwrap()
-div_tags = soup.find_all('quote')
-for item in div_tags: item.unwrap()
-div_tags = soup.find_all('div')
-for item in div_tags: item.unwrap()
+MyHTMLParser().feed(str(soup))
 
+#print (soup.prettify())
 
-
-div_tags = soup.find_all('span')
-
-for items in div_tags:
-    if 'class' not in str(items):
-        items.unwrap()
-
-
-mydivs = soup.find_all("span", {"class": "bibl"})
-
-for items in mydivs:
-    items.unwrap()
-
-mydivs = soup.find_all("span", {"class": "reg"})
-
-for items in mydivs:
-    items.unwrap()
-
-#print (soup)
-
-#soup = soup.prettify()
-
-parser.feed(str(soup))
-
-with open("test.html", "w") as myfile: myfile.write(str(soup))
-
-#soup = soup.select('.span , .bibl')
 
 document.save('testing.docx')
