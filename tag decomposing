@@ -1,0 +1,7 @@
+#SINGLE INSTANCE TAG REMOVAL
+#removetag = ['img']
+#for tag in removetag: soup.find(tag).decompose()
+#MULTI INSTANCE TAG REMOVAL
+#removetags = ['head']
+#for tags in removetags: items = soup.find_all(tag)
+#for item in items: item.decompose()
