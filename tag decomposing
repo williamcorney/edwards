@@ -1,3 +1,4 @@
+VERSION 1.0
 #SINGLE INSTANCE TAG REMOVAL
 #removetag = ['img']
 #for tag in removetag: soup.find(tag).decompose()
@@ -5,3 +6,19 @@
 #removetags = ['head']
 #for tags in removetags: items = soup.find_all(tag)
 #for item in items: item.decompose()
+
+
+
+VERSION 2.0
+
+#  if you get error might be because of inherited tag decomposition .  ie that tag was in a tag earlier decomposed
+decomposetags= ['head']
+
+for tags in decomposetags:
+    NumberofOcurrences = len(soup.find_all(tags))
+    if NumberofOcurrences < 2: soup.find(tags).decompose()
+    if NumberofOcurrences > 1:
+        for items in soup.find_all(tags):
+            items.decompose()
+
+print (soup)
