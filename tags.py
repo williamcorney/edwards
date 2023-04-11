@@ -62,11 +62,6 @@ class MyHTMLParser(HTMLParser):
                 self.count = self.count + 1
                 self.paragraph.add_footnote(data) # add a footnote
 
-
-
-
-
-
             #self.paragraph.add_run(' ')
             #self.paragraph.add_footnote(data) # add a footnote
             #self.paragraph.add_run(' ')
@@ -227,4 +222,4 @@ if len (decomposelist) > 1 :
 
 """
 
-print (soup)
+#print (soup)
