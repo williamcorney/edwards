@@ -56,7 +56,20 @@ class MyHTMLParser(HTMLParser):
 
         if self.flag == 'span-fnote':
 
-            self.paragraph.add_footnote(data) # add a footnote
+            if self.count == 1:
+                self.paragraph.add_run(data)
+            if self.count == 0 :
+                self.count = self.count + 1
+                self.paragraph.add_footnote(data) # add a footnote
+
+
+
+
+
+
+            #self.paragraph.add_run(' ')
+            #self.paragraph.add_footnote(data) # add a footnote
+            #self.paragraph.add_run(' ')
         if self.flag == 'span-font-style:italic':
             if self.count == 1:
                 self.paragraph.add_run(data)
