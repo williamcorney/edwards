@@ -1,70 +1,86 @@
 from bs4 import BeautifulSoup
-import os
-if os.path.isfile('testing.docx') is True: os.remove('testing.docx')
-from tidylib import tidy_document
-
-from html.parser import HTMLParser
-from html.entities import name2codepoint
-from colorama import Fore, Back, Style
-import docx
-
-
-document = docx.Document()
-
-class MyHTMLParser(HTMLParser):
-
-    def handle_starttag(self, tag, attrs):
-        self.fnotecounter = 0
-        for attr in attrs:
-            self.attribute = (attr[1])
-            print(Fore.GREEN + "START (", self.attribute , ") " , tag)
-        if tag == 'p':
-            self.attribute ='p'
+import os, requests
+import time
+count = 0
+########################################################################################################################
+########################################################################################################################
+#First phase where we grab the top level table of contents of all volumes, the hyperlink TO each file and the name of the file
+########################################################################################################################
+########################################################################################################################
 
 
-    def handle_endtag(self, tag):
-        print (Fore.YELLOW + 'END of ' + tag)
-        #print(Fore.RED + "End tag        :",tag[0:10])
-    def handle_data(self, data):
+# 1 If the 'final' index exists remove it - this is so can re-run script if make changes
+if os.path.isfile('./temp/index.html') is True: os.remove('./temp/index.html')
+# 2 If working cache index  doesnt exist then create it
+if os.path.isfile('./temp/cache') is False:
+    print ('main index cache file doesnt exist so grabbing it')
+    page = (requests.get('http://edwards.yale.edu/research/browse'))
+    soup = BeautifulSoup(page.text, "html.parser")
+    with open("./temp/cache", "w") as myfile:
+        myfile.write(str(soup))
+# 3 Otherwise if it does exist lets process it through soup
+else:
+    print ('main index cache file was found so using' )
+    with open('./temp/cache', 'r') as f:
+        contents = f.read()
+    soup = BeautifulSoup(contents, "html.parser")
+# 4 Obtain all the A HREF links from the index and populate filename /dirname
 
-        print (Fore.LIGHTBLUE_EX + self.attribute + " " +  data)
-        #print(Fore.BLUE + 'Data           : ' + data)
+for links in soup.findAll('a'):
 
-        if 'head' in self.attribute:
-            document.add_heading(data, 2)
+    filename = os.path.basename(links.get('href'))
+    pathname = os.path.dirname(links.get('href'))
+#5  Figure out the base url,  update index links to append html and strip base url.
+    #this also filters out the urls we dont want from all the hyperlinks found on page
+    if "archive" in pathname:
+        basepath = pathname
+        count = count + 1
+        print ('Renaming link ' + str(count))
+        links['href'] = links['href'].replace(filename, filename + ".html")
+        links['href'] = links['href'].replace(pathname + '/', '')
 
-        if 'fnote' in self.attribute:
-            print ('trigger1')
+#6  Remove the 'final' index file if it exists before outputing soup to index
+if os.path.isfile('./temp/index.html') is True:
+    os.remove('./temp/index.html')
 
-            self.paragraph.add_footnote(data)  # add a footnote
-            self.attribute= 'p'
-            return
-        #else:
-           # self.paragraph = document.add_paragraph(data)  # create new paragraph
-        if 'p' in self.attribute:
-            print ('trigger2')
-            self.paragraph = document.add_paragraph(data) # create new paragraph
+##
+result = soup.select('style, #center ul ')
+for items in result:
+    with open("./temp/index.html", "a") as myfile: myfile.write(str(items))
 
+print ('Finished creating index.html file')
 
+#7  Determine all the urls, filenames  for next part of downloading and output to a dictionary called secondphaselinksandfilenames
+   # The select statement homes in on the elements we want from the raw html
 
+secondphaselinksandfilenames = {}
+selectquery1 = soup.select('#center ul ')
+count = 0
+for link in selectquery1:
 
-
-with open('sermon.html', 'r') as f: contents = f.read()
-soup = BeautifulSoup(contents, "lxml")
-unwantedtags=['body','html','daterange','date','div']
-for tags in unwantedtags:
-    target = soup.find_all(tags)
-    for items in target: items.unwrap()
-
-for span_tag in soup.findAll('span', {'class':'bibl'}): span_tag.unwrap()
-for span_tag in soup.findAll('span', {'class':'reg'}): span_tag.unwrap()
-for tag in soup.findAll('span', {'class':''}): tag.unwrap()
-for items in soup.select('.fnote'):
-    if 'id' in (items.attrs): items.attrs.pop('id')
-
-MyHTMLParser().feed(str(soup))
-
-#print (soup.prettify())
+    raw = link.select('a')
+    for item in raw:
 
 
-document.save('testing.docx')
+        fullfilename =  (item.get('href'))
+        nameoffile = fullfilename
+        nameoffile = nameoffile.replace('.html', '')
+        fullurl = 'http://edwards.yale.edu' + basepath + '/' + nameoffile
+
+        #print (fullfilename)
+        #print (fullurl)
+
+
+        secondphaselinksandfilenames[fullurl] = fullfilename
+
+
+for key,val in secondphaselinksandfilenames.items():
+    print (key)
+    print (val)
+
+import csv
+
+
+with open('stage1.csv', 'w') as f:
+    for key in secondphaselinksandfilenames.keys():
+        f.write("%s,%s\n" % (key, secondphaselinksandfilenames[key]))
