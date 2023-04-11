@@ -5,7 +5,7 @@ import docx, os
 
 
 # STAGE 0 ---LOAD UP SOUP FILE
-with open('sermon2.html', 'r') as f: contents = f.read()
+with open('sermon.html', 'r') as f: contents = f.read()
 soup = BeautifulSoup(contents, "lxml")
 # STAGE 0 ---CLASS SECTION
 
@@ -13,21 +13,24 @@ from colorama import Fore, Back, Style
 class MyHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if len (attrs) == 0 :
-            print(Fore.LIGHTGREEN_EX + 'start of ' + tag)
+           #print(Fore.LIGHTGREEN_EX + 'start of ' + tag)
+            self.flag = tag
         else:
-            for item in attrs: print (Fore.LIGHTGREEN_EX + 'start of ' + tag + ' (' + item[1] + ')')
+            for item in attrs:
+                #print (Fore.LIGHTGREEN_EX + tag + ' (' + item[1] + ')')
+                self.flag = tag + '-' + item[1]
 
-        for item in attrs:
-            print ( tag  + item[1] + 'ZZZZZZ' )
+        #for item in attrs:
+            #print ( tag  + item[1] + 'ZZZZZZ' )
         tag = ''
 
         #for item in attrs:
            # if item[1]
 
-    def handle_endtag(self, tag):
-        print (Fore.RED + 'end of ' + tag )
+    #def handle_endtag(self, tag):
+        #print (Fore.RED + 'end of ' + tag )
     def handle_data(self, data):
-
+        print (Fore.LIGHTGREEN_EX + self.flag)
         print (Fore.LIGHTBLUE_EX + data )
 
 # ******** TRANSFORMATIONS********
