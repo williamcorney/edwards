@@ -1,0 +1,36 @@
+from Functions import *
+
+from tkinter import *
+# Tkinter Window
+tkWindow = Tk();
+tkWindow.geometry("500x500")
+# Tkinter Text Box
+textBox =Text(tkWindow,height=15,width=60);
+Listbox = Listbox (tkWindow)
+Listbox.pack()
+textBox.pack(expand= 1, fill= BOTH)
+Button1 = Button(tkWindow, text='Unwrap')
+Button1.pack()
+
+
+Soup = SoupFILEimport('/Users/williamcorney/PycharmProjects/pythonProject/source/Yy4wOjI6NS53amVv.html')
+Tags = SoupALLtags(Soup)
+
+for item in Tags: Listbox.insert('end', item)
+def callback(event):
+
+
+    selection = event.widget.curselection()
+    if selection:
+        index = selection[0]
+        data = event.widget.get(index)
+        soup = SoupSPECIFICtag(data)
+        textBox.delete("1.0", "end")
+
+        for items in soup:
+            textBox.insert(INSERT, str(items))
+
+        #label.configure(text=SoupSPECIFICtag(data))
+    print (data)
+Listbox.bind("<<ListboxSelect>>", callback)
+tkWindow.mainloop()
