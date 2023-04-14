@@ -20,10 +20,12 @@ def SoupALLtags(soup):
     for tags in taglist1:
        if tags not in taglist2:
            taglist2.append(tags)
+    taglist2.reverse()
     return taglist2
 #   Function 3
 def SoupSPECIFICtag(soup,tag):
     searchresponse = soup.find_all(tag)
+    print (searchresponse)
     return searchresponse
 #   Function 4
 def SoupSPANclassTAG(classname):
