@@ -5,7 +5,7 @@ import time,csv
 
 list = []
 
-#   Function 1.
+#   Function 1
 def SoupFILEimport(filename):
 
     with open(filename, 'r') as f: contents = f.read()
