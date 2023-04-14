@@ -5,7 +5,7 @@ from Functions import *
 soup = SoupFILEimport('/Users/williamcorney/PycharmProjects/pythonProject/source/Yy4wOjI6NS53amVv.html')
 
 
-#
+#.
 class Window(QWidget):
     global soup
 
