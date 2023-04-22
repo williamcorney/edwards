@@ -27,6 +27,12 @@ class MyHTMLParser(HTMLParser):
                 document.add_heading(data, level=1)
             if spanattribs == "[('class', 'fnote')]":
                 p.add_footnote (data).italic = False
+                return
+            if spanattribs == "[('class', 'reg')]":
+                print ('BIBLEREG ' + data)
+                p.add_run(data).italic = False
+                return
+
 
         if self.lasttag == 'i':
             if list[-1] =='p':
