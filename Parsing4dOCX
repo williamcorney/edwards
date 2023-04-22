@@ -10,19 +10,27 @@ class MyHTMLParser(HTMLParser):
     document = docx.Document()
     def handle_starttag(self, tag, attrs):
         global lasttag
+        global spanattribs
         print(Fore.GREEN + "Start:" + Fore.LIGHTWHITE_EX + tag )
         lasttag = tag
+        if tag == 'span':
+            spanattribs = str(attrs)
+            print (len (spanattribs))
         list.append (tag)
 
     def handle_data(self, data):
         global p
-
+        if self.lasttag == 'span':
+            print('spanner found' + str(spanattribs))
+            if spanattribs == "[('class', 'head')]":
+                print ('triggered here')
+                document.add_heading(data, level=1)
         if self.lasttag == 'i':
             if list[-1] =='p':
                 p.add_run(data).italic = False
             else:
                 p.add_run(data).italic = True
-                #print('LAST TAG:' + list[-1])
+                #print('LAST TAG:' + list[-1]
         else:
             p = document.add_paragraph (data)
     def handle_endtag(self, tag):
