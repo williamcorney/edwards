@@ -7,7 +7,7 @@ switch = 0
 
 class MyHTMLParser(HTMLParser):
     global document
-    document = docx.Document()
+
     def handle_starttag(self, tag, attrs):
         global lasttag
         global spanattribs
@@ -25,6 +25,9 @@ class MyHTMLParser(HTMLParser):
             if spanattribs == "[('class', 'head')]":
                 print ('triggered here')
                 document.add_heading(data, level=1)
+            if spanattribs == "[('class', 'fnote')]":
+                p.add_footnote (data).italic = False
+
         if self.lasttag == 'i':
             if list[-1] =='p':
                 p.add_run(data).italic = False
@@ -36,7 +39,8 @@ class MyHTMLParser(HTMLParser):
     def handle_endtag(self, tag):
         print(Fore.RED + "End:" + Fore.LIGHTWHITE_EX + tag + Fore.LIGHTWHITE_EX)
         if len(list) >1:
-            list.remove(tag)
+            if tag in list:
+                list.remove(tag)
 
 parser = MyHTMLParser()
 
@@ -47,6 +51,7 @@ parser = MyHTMLParser()
 dict = CSVimport('volfilenames.csv')
 
 for filename,vol in dict.items():
+    document = docx.Document()
     soup = SoupFILEimport(inputpath + filename)
     soup  = str (soup)
     soup = soup.replace('<p><p>','<p>')
@@ -55,8 +60,8 @@ for filename,vol in dict.items():
     os.system("pkill 'Microsoft Word'")
     inputpath = './source/'
 
-    document.save('test.docx')
+    document.save('./docx/' + str(vol) + '/' + str(filename) + '.docx')
 
-    quit()
+
 
 
