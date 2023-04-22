@@ -1,0 +1,54 @@
+import colorama,os,docx
+from Functions import *
+from html.parser import HTMLParser
+from colorama import *
+list = []
+switch = 0
+
+class MyHTMLParser(HTMLParser):
+    global document
+    document = docx.Document()
+    def handle_starttag(self, tag, attrs):
+        global lasttag
+        print(Fore.GREEN + "Start:" + Fore.LIGHTWHITE_EX + tag )
+        lasttag = tag
+        list.append (tag)
+
+    def handle_data(self, data):
+        global p
+
+        if self.lasttag == 'i':
+            if list[-1] =='p':
+                p.add_run(data).italic = False
+            else:
+                p.add_run(data).italic = True
+                #print('LAST TAG:' + list[-1])
+        else:
+            p = document.add_paragraph (data)
+    def handle_endtag(self, tag):
+        print(Fore.RED + "End:" + Fore.LIGHTWHITE_EX + tag + Fore.LIGHTWHITE_EX)
+        if len(list) >1:
+            list.remove(tag)
+
+parser = MyHTMLParser()
+
+inputpath = '/Users/williamcorney/PycharmProjects/pythonProject/source/'
+
+parser = MyHTMLParser()
+
+dict = CSVimport('volfilenames.csv')
+
+for filename,vol in dict.items():
+    soup = SoupFILEimport(inputpath + filename)
+    soup  = str (soup)
+    soup = soup.replace('<p><p>','<p>')
+
+    parser.feed(str(soup))
+    os.system("pkill 'Microsoft Word'")
+    inputpath = './source/'
+
+    document.save('test.docx')
+
+    quit()
+
+
