@@ -1,0 +1,52 @@
+from html.parser import HTMLParser
+
+import colorama
+
+from Function2 import *
+from colorama import *
+taglist =[]
+
+class MyHTMLParser(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+
+
+        if len(attrs) >0:
+            print("START:", tag, attrs)
+        if len (attrs) == 0:
+            print("START:", tag)
+        self.opentags=tag
+        taglist.append(tag)
+
+
+    def handle_endtag(self, tag):
+        print("END:", tag)
+        taglist.remove(tag)
+
+    def handle_data(self, data):
+        print(Fore.BLUE + "DATA(" + taglist[-1] + ")-"  + data + colorama.Style.RESET_ALL)
+        
+        
+
+parser = MyHTMLParser()
+mydict = CSVimport('volfilenames.csv')
+for filename, volno in mydict.items():
+    #Key - (U)nwrap (D)ecompose
+    #      (S)elect (U)nwrap
+    #      (S)elect (D)ecompose
+
+    soup = SoupFILEimport(filename)
+    U1(soup, ['div', 'front'])
+    SD(soup, 'style')
+    SD(soup, 'figure')
+    U1(soup, ['div', 'front'])
+    U2(soup, 'div', 'type', 'headnote')
+    U2(soup, 'div', 'type', 'copyright')
+    U2(soup, 'span', 'style', 'font-variant:small-caps')
+
+    R2(soup, 'span', 'style', 'font-style:italic', 'i')
+    R3(soup, 'xmlns')
+    parser.feed(str(soup))
+    quit()
+
+
+# html = "<h1> heading</h1><p> paragraph <i> italics <b> bold </b> </i> should be paragraph </p><h2> heading </h2> <p> paragraph <i> italics </i> and more paragraph </p>"
