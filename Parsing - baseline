@@ -49,7 +49,10 @@ class MyHTMLParser(HTMLParser):
 
         if activetag == 'h1':
             document.add_heading(data, level=3)
+
             paragraph = document.add_paragraph ('')
+            paragraph =document.add_paragraph()
+
             print ('111111')
             return
         if activetag == 'p':
@@ -66,6 +69,9 @@ class MyHTMLParser(HTMLParser):
             paragraph.add_run(data).italic =True
             switch = 1
             print('333333')
+
+        if activetag == 'item':
+            paragraph = document.add_paragraph(data)
 
 
 parser = MyHTMLParser()
@@ -85,7 +91,7 @@ for filename, volno in mydict.items():
     U2(soup, 'div', 'type', 'copyright')
     U2(soup, 'span', 'style', 'font-variant:small-caps')
     R2(soup, 'span', 'class', 'head', 'h1')
-
+    R2(soup, 'span', 'class', 'item', 'item')
     R2(soup, 'span', 'style', 'font-style:italic', 'i')
     R3(soup, 'xmlns')
     document = docx.Document()
@@ -96,10 +102,11 @@ for filename, volno in mydict.items():
     os.system("pkill 'Microsoft Word'")
     time.sleep(1)
     document.save('./docx/temp/' + str(count0) + filename + '.docx')
-    os.system("open /Applications/Microsoft\ Word.app " + '/Users/williamcorney/PycharmProjects/pythonProject/DOCX/temp/' + str(count0) + filename + '.docx')
+    #os.system("open /Applications/Microsoft\ Word.app " + '/Users/williamcorney/PycharmProjects/pythonProject/DOCX/temp/2' + filename + '.docx')
 
 
-    quit()
+    if count0 > 2:
+        quit()
 
 
 # html = "<h1> heading</h1><p> paragraph <i> italics <b> bold </b> </i> should be paragraph </p><h2> heading </h2> <p> paragraph <i> italics </i> and more paragraph </p>"
