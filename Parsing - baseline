@@ -69,9 +69,14 @@ class MyHTMLParser(HTMLParser):
             paragraph.add_run(data).italic =True
             switch = 1
             print('333333')
+            return
 
         if activetag == 'item':
             paragraph = document.add_paragraph(data)
+
+        if activetag == 'fnote':
+
+            paragraph.add_footnote(data)
 
 
 parser = MyHTMLParser()
@@ -84,6 +89,7 @@ for filename, volno in mydict.items():
 
     soup = SoupFILEimport(filename)
     U1(soup, ['div', 'front'])
+    SU(soup,'date')
     SD(soup, 'style')
     SD(soup, 'figure')
     U1(soup, ['div', 'front'])
@@ -92,6 +98,7 @@ for filename, volno in mydict.items():
     U2(soup, 'span', 'style', 'font-variant:small-caps')
     R2(soup, 'span', 'class', 'head', 'h1')
     R2(soup, 'span', 'class', 'item', 'item')
+    R2(soup, 'span', 'class', 'fnote', 'fnote')
     R2(soup, 'span', 'style', 'font-style:italic', 'i')
     R3(soup, 'xmlns')
     document = docx.Document()
@@ -105,7 +112,7 @@ for filename, volno in mydict.items():
     #os.system("open /Applications/Microsoft\ Word.app " + '/Users/williamcorney/PycharmProjects/pythonProject/DOCX/temp/2' + filename + '.docx')
 
 
-    if count0 > 2:
+    if count0 > 5:
         quit()
 
 
