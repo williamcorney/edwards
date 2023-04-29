@@ -1,12 +1,24 @@
 from html.parser import HTMLParser
-
+import time
 import colorama
-
+import docx
+import os
 from Function2 import *
 from colorama import *
 taglist =[]
+count0 = 0
+count1 = 0
+count2 = 0
+count3 = 0
+switch = 0
+
 
 class MyHTMLParser(HTMLParser):
+    global document
+    global count1
+    global count2
+    global count3
+    global paragraph
     def handle_starttag(self, tag, attrs):
 
 
@@ -18,18 +30,48 @@ class MyHTMLParser(HTMLParser):
         taglist.append(tag)
 
 
+
+
     def handle_endtag(self, tag):
         print("END:", tag)
         taglist.remove(tag)
 
+
     def handle_data(self, data):
+        global count1
+        global count2
+        global count3
+        global paragraph
+        global document
+        global switch
         print(Fore.BLUE + "DATA(" + taglist[-1] + ")-"  + data + colorama.Style.RESET_ALL)
-        
-        
+        activetag = taglist[-1]
+
+        if activetag == 'h1':
+            document.add_heading(data, level=3)
+            paragraph = document.add_paragraph ('')
+            print ('111111')
+            return
+        if activetag == 'p':
+            if switch == 1:
+                paragraph.add_run(data).italic = False
+                switch = 0
+                return
+            if switch == 0:
+                paragraph = document.add_paragraph(data)
+            print('222222')
+            return
+        if activetag == 'i':
+
+            paragraph.add_run(data).italic =True
+            switch = 1
+            print('333333')
+
 
 parser = MyHTMLParser()
 mydict = CSVimport('volfilenames.csv')
 for filename, volno in mydict.items():
+    count0 +=1
     #Key - (U)nwrap (D)ecompose
     #      (S)elect (U)nwrap
     #      (S)elect (D)ecompose
@@ -42,10 +84,21 @@ for filename, volno in mydict.items():
     U2(soup, 'div', 'type', 'headnote')
     U2(soup, 'div', 'type', 'copyright')
     U2(soup, 'span', 'style', 'font-variant:small-caps')
+    R2(soup, 'span', 'class', 'head', 'h1')
 
     R2(soup, 'span', 'style', 'font-style:italic', 'i')
     R3(soup, 'xmlns')
+    document = docx.Document()
+    paragraph = document.add_paragraph
+
     parser.feed(str(soup))
+
+    os.system("pkill 'Microsoft Word'")
+    time.sleep(1)
+    document.save('./docx/temp/' + str(count0) + filename + '.docx')
+    os.system("open /Applications/Microsoft\ Word.app " + '/Users/williamcorney/PycharmProjects/pythonProject/DOCX/temp/' + str(count0) + filename + '.docx')
+
+
     quit()
 
 
