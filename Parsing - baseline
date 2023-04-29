@@ -11,15 +11,18 @@ count1 = 0
 count2 = 0
 count3 = 0
 switch = 0
+switch2= 0
 
 
 class MyHTMLParser(HTMLParser):
     global document
+    global switch2
     global count1
     global count2
     global count3
     global paragraph
     def handle_starttag(self, tag, attrs):
+        global switch
 
 
         if len(attrs) >0:
@@ -28,6 +31,11 @@ class MyHTMLParser(HTMLParser):
             print("START:", tag)
         self.opentags=tag
         taglist.append(tag)
+        if tag == 'fnote':
+            switch2 = 1
+
+        if taglist[-1] == 'p':
+            switch = 0
 
 
 
@@ -35,6 +43,7 @@ class MyHTMLParser(HTMLParser):
     def handle_endtag(self, tag):
         print("END:", tag)
         taglist.remove(tag)
+        switch2 = 0
 
 
     def handle_data(self, data):
@@ -44,13 +53,14 @@ class MyHTMLParser(HTMLParser):
         global paragraph
         global document
         global switch
+        global switch2
         print(Fore.BLUE + "DATA(" + taglist[-1] + ")-"  + data + colorama.Style.RESET_ALL)
         activetag = taglist[-1]
 
         if activetag == 'h1':
             document.add_heading(data, level=3)
 
-            paragraph = document.add_paragraph ('')
+            #paragraph = document.add_paragraph ('')
             paragraph =document.add_paragraph()
 
             print ('111111')
@@ -58,13 +68,16 @@ class MyHTMLParser(HTMLParser):
         if activetag == 'p':
             if switch == 1:
                 paragraph.add_run(data).italic = False
+                print ('SWITCH -1 or enabled so run')
                 switch = 0
                 return
             if switch == 0:
+                print('SWITCH -0 or disabled so new paragraph')
                 paragraph = document.add_paragraph(data)
             print('222222')
             return
         if activetag == 'i':
+
 
             paragraph.add_run(data).italic =True
             switch = 1
@@ -77,7 +90,17 @@ class MyHTMLParser(HTMLParser):
         if activetag == 'fnote':
 
             paragraph.add_footnote(data)
+            switch = 1
 
+            if switch2 == 1:  # or on
+                switch = 1
+
+        if activetag == 'quote':
+            paragraph = document.add_paragraph(data)
+
+
+
+#1 and 0 is run and new paragraph respectively
 
 parser = MyHTMLParser()
 mydict = CSVimport('volfilenames.csv')
@@ -100,7 +123,10 @@ for filename, volno in mydict.items():
     R2(soup, 'span', 'class', 'item', 'item')
     R2(soup, 'span', 'class', 'fnote', 'fnote')
     R2(soup, 'span', 'style', 'font-style:italic', 'i')
+    R2(soup, 'span', 'style', 'text-align:left', 'p')
+    R2(soup, 'span', 'style', 'text-align:right', 'p')
     R3(soup, 'xmlns')
+
     document = docx.Document()
     paragraph = document.add_paragraph
 
