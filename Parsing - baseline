@@ -123,6 +123,9 @@ for filename, volno in mydict.items():
     R2(soup, 'span', 'class', 'item', 'item')
     R2(soup, 'span', 'class', 'fnote', 'fnote')
     R2(soup, 'span', 'style', 'font-style:italic', 'i')
+    R2(soup, 'span', 'style', 'font-style: italic;', 'i')
+
+
     R2(soup, 'span', 'style', 'text-align:left', 'p')
     R2(soup, 'span', 'style', 'text-align:right', 'p')
     R3(soup, 'xmlns')
@@ -138,7 +141,7 @@ for filename, volno in mydict.items():
     #os.system("open /Applications/Microsoft\ Word.app " + '/Users/williamcorney/PycharmProjects/pythonProject/DOCX/temp/2' + filename + '.docx')
 
 
-    if count0 > 5:
+    if count0 > 30:
         quit()
 
 
