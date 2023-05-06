@@ -1,0 +1,269 @@
+from PyQt6.QtWidgets import QListWidget,QApplication,QMainWindow,QPushButton,QFileDialog,QTextEdit,QPlainTextEdit,QComboBox,QVBoxLayout,QLabel
+from PyQt6.QtGui import QIcon
+from PyQt6 import QtCore
+from PyQt6 import uic
+from PyQt6 import QtGui
+import sys
+from Functions import *
+from bs4 import BeautifulSoup
+
+
+class Ui(QMainWindow):
+    global count2
+    count2 =0
+    def __init__(self):
+        super(Ui, self).__init__()
+        self.myset = set()
+        self.count1 = 0
+        self.count3 = 0
+        uic.loadUi('NewGUI2.ui', self)
+        combos = ['combo1']
+        lists = ['list1', 'list2', 'list3','list4']
+        buttons = ['button1', 'button2', 'button4','button5','button6','button7','button8']
+        for items in combos: self.items = self.findChild(QLabel, items)
+        for items in combos: self.items = self.findChild(QComboBox, items)
+        for items in lists: self.items = self.findChild(QListWidget, items)
+        for items in buttons: self.items = self.findChild(QPushButton, items)
+        for items in buttons: self.items = self.findChild(QPushButton, items)
+        self.textedit = self.findChild(QTextEdit,'textedit')
+        self.label5 = self.findChild(QLabel,'label_5')
+        self.textedit2 = self.findChild(QTextEdit,'textedit2')
+
+        self.button1.clicked.connect(self.button1click)
+        self.button2.clicked.connect(self.button2click)
+        self.button4.clicked.connect(self.button4click)
+        self.button5.clicked.connect(self.button5click)
+        self.button6.clicked.connect(self.button6click)
+        self.button7.clicked.connect(self.button7click)
+        self.button8.clicked.connect(self.button8click)
+        self.combo1.currentTextChanged.connect(self.combo1changed)
+        self.list1.clicked.connect(self.list1clicked)
+        self.list2.clicked.connect(self.list2clicked)
+        self.list4.clicked.connect(self.list4clicked)
+        self.button1.setEnabled(False)
+        self.button2.setEnabled(False)
+        self.button4.setEnabled(False)
+        self.button5.setEnabled(False)
+        self.button6.setEnabled(False)
+        self.button7.setEnabled(False)
+        self.combo1.setEnabled(False)
+        self.mode = self.combo1.currentText()
+        self.show()
+
+
+    def button1click(self):
+
+        list1selection = (self.list1.currentItem().text())
+        self.myset.add(('U1:' + list1selection).lower())
+        self.list4.clear()
+        for items in self.myset: self.list4.addItem(items)
+        self.button1.setEnabled(False)
+        self.button2.setEnabled(False)
+        self.Commonupdate()
+
+
+    def button2click(self):
+
+        list1selection = (self.list1.currentItem().text())
+        self.myset.add(('D1:' + list1selection).lower())
+        self.list4.clear()
+        for items in self.myset: self.list4.addItem(items)
+        self.button1.setEnabled(False)
+        self.button2.setEnabled(False)
+
+        self.Commonupdate()
+
+
+
+    def button4click(self):
+
+
+        path2 = '/users/williamcorney/downloads/master/'
+        if self.count1 > 1:
+            self.count1 -= 1
+        self.fname = path2 + self.csvfilelist[self.count1]
+        self.label5.setText(self.fname)
+        self.soup = SoupFILEimport(self.fname)
+        self.Commonupdate()
+
+    def button5click(self):
+
+
+
+        path2 = '/users/williamcorney/downloads/master/'
+        self.count1 += 1
+        self.fname = path2 + self.csvfilelist[self.count1]
+        self.label5.setText(self.fname)
+        self.soup = SoupFILEimport(self.fname)
+        self.Commonupdate()
+
+    def button6click(self):
+
+
+        list4selection = (self.list4.currentItem().text())
+        self.myset.discard(list4selection)
+        self.list4.clear()
+        for items in self.myset: self.list4.addItem(items)
+        self.soup = SoupFILEimport(self.fname)
+        if len(self.myset) < 1:
+            self.button6.setEnabled(False)
+            self.button7.setEnabled(False)
+
+
+        self.Commonupdate()
+    def button7click(self):
+
+
+        self.list4.clear()
+        self.myset.clear()
+        self.soup = SoupFILEimport(self.fname)
+        self.button6.setEnabled(False)
+        self.button7.setEnabled(False)
+        self.Commonupdate()
+    def button8click(self):
+        self.textedit.clear()
+        self.combo1.setEnabled(True)
+        self.list1.clear()
+        self.list2.clear()
+        self.list3.clear()
+        self.list4.clear()
+        self.myset.clear()
+        self.home_dir = str('/Users/williamcorney/PycharmProjects/pythonProject')
+        self.fname = QFileDialog.getOpenFileName(self, 'Open file', self.home_dir)
+        try:
+            filetype = (str((os.path.basename(self.fname[0]))).split('.')[1])
+        except:
+            return
+
+        if filetype == 'html':
+            self.button4.setEnabled(False)
+            self.button5.setEnabled(False)
+            self.fname = self.fname[0]
+            self.soup = SoupFILEimport(self.fname)
+
+            self.Commonupdate()
+
+        if filetype == 'csv':
+
+            with open(str(self.fname[0]), mode='r') as infile:
+                reader = csv.reader(infile)
+                csvdict = {rows[0]: rows[1] for rows in reader}
+
+            self.csvfilelist = []
+
+            for filename, volno in csvdict.items():
+                self.csvfilelist.append(filename)
+
+            self.button4.setEnabled(True)
+            self.button5.setEnabled(True)
+            self.button4click()
+            return
+
+    def combo1changed(self):
+        self.mode = self.combo1.currentText()
+        self.soup = Soupify(self.soup)
+        self.Commonupdate()
+    def Commonupdate(self):
+
+
+
+        for instruction in self.myset:
+            A = instruction.split(':')[0]
+            B = instruction.split(':')[1]
+            if len(instruction.split(':')) > 2: C = instruction.split(':')[2]
+            if len(instruction.split(':')) > 3: D = instruction.split(':')[3]
+            if len(instruction.split(':')) > 4: E = instruction.split(':')[4]
+            # Decompose/Unwrap by tag
+            if A == 'd1':
+                for items in self.soup.find_all(B): items.decompose()
+            if A == 'u1':
+                for items in self.soup.find_all(B): items.unwrap()
+            if A == 'f1':
+                for items in self.soup.find_all(B, {C: D}): print(items)
+            if A == 'f2':
+                result = self.soup.find_all(B, C)
+                for items in result: print(items)
+            if A == 'r1':
+                for items in self.soup.find_all(B):
+                    new_tag = self.soup.new_tag(C)
+                    new_tag.string = items.getText()
+                    items.replace_with(new_tag)
+            if A == 'r2':
+                for items in self.soup.find_all(B, {C: D}):
+                    new_tag = self.soup.new_tag(E)
+                    new_tag.string = items.getText()
+                    items.replace_with(new_tag)
+
+
+        self.list1.clear()
+        self.textedit.clear()
+
+        self.tags = (SoupALLtags(self.soup))
+        for items in self.tags: self.list1.addItem(items)
+
+
+        if self.mode == 'HTML':
+
+            for items in self.soup:
+                self.textedit.append(str(items))
+
+            # self.textedit.setText(str(self.soup))
+        if self.mode == 'RAW':
+            for items in self.soup:
+                self.textedit.insertPlainText(str(items))
+
+
+
+    def list1clicked(self):
+        self.button1.setEnabled(True)
+        self.button2.setEnabled(True)
+
+        # list1selection = (self.list1.currentItem().text())
+        item = self.list1.currentItem().text()
+
+        self.soup = Soupify(self.soup)
+        filter = SoupSPECIFICtag(self.soup, item)
+        # attributes = []
+        # self.list2.clear()
+        # for element in filter:
+        #     for item in element.attrs:
+        #         if item not in attributes:
+        #             attributes.append(item)
+        # attributes.reverse()
+        # for atts in attributes:
+        #     self.list2.addItem(atts)
+        self.textedit.clear()
+        if self.mode == 'HTML':
+            for x in filter: self.textedit.insertHtml(str(x))
+
+
+        if self.mode == 'RAW':
+            for x in filter: self.textedit.insertPlainText(str(x))
+    def list2clicked(self):
+        pass
+        # for tags in self.soup.find_all(self.list1.currentItem().text()):
+        #     # print(str(tags) + 'should be here ')
+        #     valueslist = []
+        #
+        #     if tags.has_attr(self.list2.currentItem().text()):
+        #
+        #         items = (tags.attrs[self.list2.currentItem().text()])
+        #         self.list3.clear()
+        #
+        #         if items not in valueslist:
+        #             valueslist.append(str(items))
+        #
+        #         for items in valueslist:
+        #             self.list3.addItem(items)
+
+    def list4clicked(self):
+
+        if len(self.myset) > 0:
+            self.button6.setEnabled(True)
+            self.button7.setEnabled(True)
+
+
+
+app = QApplication(sys.argv)
+window = Ui()
+app.exec()
